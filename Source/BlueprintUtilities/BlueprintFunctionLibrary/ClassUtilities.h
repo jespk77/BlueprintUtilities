@@ -7,18 +7,19 @@ UCLASS()
 class BLUEPRINTUTILITIES_API UClassUtilities : public UBlueprintFunctionLibrary {
 	GENERATED_BODY()
 
-private:
-	template<typename Iterable>
-	static UClass* GetCommonClassForItems(const Iterable& objects);
-
 public:
 	UFUNCTION(Category = "Class Utilities", BlueprintCallable)
-	static void GetAllClassesOfType(TSet<UClass*>& set, const UClass* baseClass);
+	static void GetAllClassesOfType(TArray<UClass*>& classes, const UClass* baseClass);
 	template<class BaseType>
-	static void GetAllClassesOfType(TSet<UClass*>& set) { GetAllClassesOfType(set, BaseType::StaticClass()); }
+	static void GetAllClassesOfType(TArray<UClass*>& classes) { GetAllClassesOfType(classes, BaseType::StaticClass()); }
 
-	static void GetAllPropertiesForObject(TSet<FProperty*>& properties, const UObject* object);
+	static void GetAllPropertiesForObject(TArray<FProperty*>& properties, const UObject* object) { if (object) GetAllPropertiesForClass(properties, object->GetClass()); }
+	static void GetAllPropertyNamesForObject(TArray<FString>& names, const UObject* object) { if (object) GetAllPropertyNamesForClass(names, object->GetClass()); }
+	static void GetAllPropertiesForClass(TArray<FProperty*>& properties, const UClass* class_, TFunctionRef<bool(FProperty*)>* propertyTestFunction = nullptr);
+	static void GetAllPropertyNamesForClass(TArray<FString>& names, const UClass* class_, TFunctionRef<bool(FProperty*)>* propertyTestFunction = nullptr);
 
+	template<typename Iterable>
+	static UClass* GetCommonClassForItems(const Iterable& objects);
 	UFUNCTION(Category = "Class Utilities", BlueprintCallable)
 	static UClass* GetCommonClassFromArray(const TArray<UObject*>& objects) { return GetCommonClassForItems(objects); }
 	UFUNCTION(Category = "Class Utilities", BlueprintCallable)
