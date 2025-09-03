@@ -8,24 +8,6 @@ void UClassUtilities::GetAllClassesOfType(TArray<UClass*>& classes, const UClass
 	}
 }
 
-void UClassUtilities::GetAllPropertiesForClass(TArray<FProperty*>& properties, const UClass* class_, TFunctionRef<bool(FProperty*)>* propertyTestFunction) {
-	properties.Reset();
-	if (!class_) return;
-
-	for (TFieldIterator<FProperty> it(class_); it; ++it) {
-		FProperty* property = *it;
-		if (!propertyTestFunction || (*propertyTestFunction)(property)) properties.Add(property);
-	}
-}
-
-void UClassUtilities::GetAllPropertyNamesForClass(TArray<FString>& names, const UClass* class_, TFunctionRef<bool(FProperty*)>* propertyTestFunction) {
-	TArray<FProperty*> properties;
-	GetAllPropertiesForClass(properties, class_, propertyTestFunction);
-
-	names.Reset(properties.Num());
-	for (const FProperty* property : properties) names.Add(property->GetName());
-}
-
 template<typename Iterable>
 UClass* UClassUtilities::GetCommonClassForItems(const Iterable& objects) {
 	TArray<UClass*> objectClasses;

@@ -13,10 +13,29 @@ public:
 	template<class BaseType>
 	static void GetAllClassesOfType(TArray<UClass*>& classes) { GetAllClassesOfType(classes, BaseType::StaticClass()); }
 
-	static void GetAllPropertiesForObject(TArray<FProperty*>& properties, const UObject* object) { if (object) GetAllPropertiesForClass(properties, object->GetClass()); }
-	static void GetAllPropertyNamesForObject(TArray<FString>& names, const UObject* object) { if (object) GetAllPropertyNamesForClass(names, object->GetClass()); }
-	static void GetAllPropertiesForClass(TArray<FProperty*>& properties, const UClass* class_, TFunctionRef<bool(FProperty*)>* propertyTestFunction = nullptr);
-	static void GetAllPropertyNamesForClass(TArray<FString>& names, const UClass* class_, TFunctionRef<bool(FProperty*)>* propertyTestFunction = nullptr);
+	template<typename PropertyType = FProperty>
+	static void GetAllPropertiesForObject(TArray<FProperty*>& properties, const UObject* object) { if (object) GetAllPropertiesForClass<PropertyType>(properties, object->GetClass()); }
+	template<typename PropertyType = FProperty>
+	static void GetAllPropertyNamesForObject(TArray<FString>& names, const UObject* object) { if (object) GetAllPropertyNamesForClass<PropertyType>(names, object->GetClass()); }
+	template<typename PropertyType = FProperty>
+	static void GetAllPropertiesForClass(TArray<FProperty*>& properties, const UClass* class_) {
+		properties.Reset();
+		if (!class_) return;
+
+		for (TFieldIterator<FProperty> it(class_); it; ++it) {
+			FProperty* property = *it;
+			if (property->IsA<PropertyType>()) properties.Add(property);
+		}
+	}
+
+	template<typename PropertyType = FProperty>
+	static void GetAllPropertyNamesForClass(TArray<FString>& names, const UClass* class_) {
+		TArray<FProperty*> properties;
+		GetAllPropertiesForClass<PropertyType>(properties, class_);
+
+		names.Reset(properties.Num());
+		for (const FProperty* property : properties) names.Add(property->GetName());
+	}
 
 	template<typename Iterable>
 	static UClass* GetCommonClassForItems(const Iterable& objects);
