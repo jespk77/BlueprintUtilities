@@ -1,6 +1,5 @@
 #pragma once
 
-#include "CoreMinimal.h"
 #include "ClassUtilities.generated.h"
 
 UCLASS()

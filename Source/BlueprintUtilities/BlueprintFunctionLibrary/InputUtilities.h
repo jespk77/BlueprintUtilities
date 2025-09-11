@@ -1,7 +1,6 @@
 #pragma once
 
-#include "CoreMinimal.h"
-#include "InputTriggers.h"
+#include "InputActionValue.h"
 #include "InputUtilities.generated.h"
 
 class UEnhancedInputComponent;
