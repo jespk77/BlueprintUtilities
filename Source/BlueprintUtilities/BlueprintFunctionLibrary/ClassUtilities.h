@@ -13,24 +13,24 @@ public:
 	static void GetAllClassesOfType(TArray<UClass*>& classes) { GetAllClassesOfType(classes, BaseType::StaticClass()); }
 
 	template<typename PropertyType = FProperty>
-	static void GetAllPropertiesForObject(TArray<FProperty*>& properties, const UObject* object) { if (object) GetAllPropertiesForClass<PropertyType>(properties, object->GetClass()); }
+	static void GetAllPropertiesForObject(TArray<FProperty*>& properties, const UObject* object) { if (object) GetAllPropertiesForType<PropertyType>(properties, object->GetClass()); }
 	template<typename PropertyType = FProperty>
-	static void GetAllPropertyNamesForObject(TArray<FString>& names, const UObject* object) { if (object) GetAllPropertyNamesForClass<PropertyType>(names, object->GetClass()); }
+	static void GetAllPropertyNamesForObject(TArray<FString>& names, const UObject* object) { if (object) GetAllPropertiesForType<PropertyType>(names, object->GetClass()); }
 	template<typename PropertyType = FProperty>
-	static void GetAllPropertiesForClass(TArray<FProperty*>& properties, const UClass* class_) {
+	static void GetAllPropertiesForType(TArray<FProperty*>& properties, const UStruct* type) {
 		properties.Reset();
-		if (!class_) return;
+		if (!type) return;
 
-		for (TFieldIterator<FProperty> it(class_); it; ++it) {
+		for (TFieldIterator<FProperty> it(type); it; ++it) {
 			FProperty* property = *it;
 			if (property->IsA<PropertyType>()) properties.Add(property);
 		}
 	}
 
 	template<typename PropertyType = FProperty>
-	static void GetAllPropertyNamesForClass(TArray<FString>& names, const UClass* class_) {
+	static void GetAllPropertyNamesForType(TArray<FString>& names, const UStruct* type) {
 		TArray<FProperty*> properties;
-		GetAllPropertiesForClass<PropertyType>(properties, class_);
+		GetAllPropertiesForType<PropertyType>(properties, type);
 
 		names.Reset(properties.Num());
 		for (const FProperty* property : properties) names.Add(property->GetName());
