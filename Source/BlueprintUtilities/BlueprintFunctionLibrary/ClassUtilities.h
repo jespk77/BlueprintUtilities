@@ -15,8 +15,6 @@ public:
 	template<typename PropertyType = FProperty>
 	static void GetAllPropertiesForObject(TArray<FProperty*>& properties, const UObject* object) { if (object) GetAllPropertiesForType<PropertyType>(properties, object->GetClass()); }
 	template<typename PropertyType = FProperty>
-	static void GetAllPropertyNamesForObject(TArray<FString>& names, const UObject* object) { if (object) GetAllPropertiesForType<PropertyType>(names, object->GetClass()); }
-	template<typename PropertyType = FProperty>
 	static void GetAllPropertiesForType(TArray<FProperty*>& properties, const UStruct* type) {
 		properties.Reset();
 		if (!type) return;
@@ -28,11 +26,13 @@ public:
 	}
 
 	template<typename PropertyType = FProperty>
+	static void GetAllPropertyNamesForObject(TArray<FString>& names, const UObject* object) { if (object) GetAllPropertiesForType<PropertyType>(names, object->GetClass()); }
+	template<typename PropertyType = FProperty>
 	static void GetAllPropertyNamesForType(TArray<FString>& names, const UStruct* type) {
 		TArray<FProperty*> properties;
 		GetAllPropertiesForType<PropertyType>(properties, type);
 
-		names.Reset(properties.Num());
+		names.Reset();
 		for (const FProperty* property : properties) names.Add(property->GetName());
 	}
 
