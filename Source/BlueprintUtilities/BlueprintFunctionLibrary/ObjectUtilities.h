@@ -21,4 +21,7 @@ public:
 		actors.Empty();
 		for (TActorIterator<ActorType> it(world); it; ++it) actors.Add(*it);
 	}
+
+	UFUNCTION(Category = "Object Utilities", BlueprintCallable)
+	static bool IsNameNone(const FName& name) { return name.IsNone(); }
 };
