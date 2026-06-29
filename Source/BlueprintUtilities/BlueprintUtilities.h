@@ -1,7 +1,3 @@
 #pragma once
 
-class FBlueprintUtilitiesModule : public IModuleInterface {
-public:
-	virtual void StartupModule() override;
-	virtual void ShutdownModule() override;
-};
+class FBlueprintUtilitiesModule : public IModuleInterface {};
