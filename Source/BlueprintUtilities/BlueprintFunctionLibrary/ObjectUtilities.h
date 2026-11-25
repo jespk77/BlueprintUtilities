@@ -1,5 +1,7 @@
 #pragma once
 
+#include <type_traits>
+#include "EngineUtils.h"
 #include "ObjectUtilities.generated.h"
 
 UCLASS()
@@ -16,9 +18,10 @@ public:
 	UFUNCTION(Category = "Object Utilities", BlueprintCallable)
 	static void GetObjectsOfType(TSet<UObject*>& objects, TSubclassOf<UObject> objectClass);
 
-	template<class ActorType>
-	static void GetActorsOfType(UWorld* world, TSet<ActorType*>& actors) {
+	template<class ContainerType>
+	static void GetActorsOfType(UWorld* world, ContainerType& actors) {
 		actors.Empty();
+		using ActorType = std::remove_pointer_t<typename ContainerType::ElementType>;
 		for (TActorIterator<ActorType> it(world); it; ++it) actors.Add(*it);
 	}
 
