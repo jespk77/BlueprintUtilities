@@ -25,6 +25,12 @@ public:
 		for (TActorIterator<ActorType> it(world); it; ++it) actors.Add(*it);
 	}
 
+	template<class ActorType>
+	static ActorType* FindActorOfType(UWorld* world) {
+		for (TActorIterator<ActorType> it(world); it; ++it) return *it;
+		return nullptr;
+	}
+
 	UFUNCTION(Category = "Object Utilities", BlueprintCallable)
 	static bool IsNameNone(const FName& name) { return name.IsNone(); }
 };
